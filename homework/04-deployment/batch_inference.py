@@ -45,22 +45,23 @@ def load_model(model_path: Path) -> tuple[DictVectorizer, Any]:
 def apply_model(year : int, month : int) -> None:
     run_id = os.getenv('RUN_ID', '123456')
     dv, model = load_model("model.bin")
-    df = read_data(f'https://d37ci6vzurychx.cloudfront.net/trip-data/{taxitype}_tripdata_{year:04d}-{month:02d}.parquet')
+    df = read_data(f'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{year:04d}-{month:02d}.parquet')
     dicts = prepare_dictionaries(df)
     X = dv.transform(dicts)
     y_pred = model.predict(X)
 
+    df['ride_id'] = generate_uuids(len(df))
+    df['predicted_duration'] = y_pred
+
     df_result = df.filter([
         "ride_id",
-        "pred_duration",
+        "predicted_duration",
         "lpep_pickup_datetime",
         "PULocationID",
         "DOLocationID",
         "duration",
         ])
     
-    df_result['predicted_duration'] = y_pred
-    df_result['ride_id'] = generate_uuids(len(df_result))
     df_result.rename(columns={"duration":"actual_duration"}, inplace=True)
     df_result['diff'] = df_result['actual_duration'] - df_result['predicted_duration']
     df_result['model_version'] = run_id

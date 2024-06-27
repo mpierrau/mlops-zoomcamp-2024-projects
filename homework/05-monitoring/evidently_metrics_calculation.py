@@ -63,7 +63,7 @@ def prep_db():
 		with psycopg.connect("host=localhost port=5432 dbname=test user=postgres password=example") as conn:
 			conn.execute(create_table_statement)
 
-def calculate_metrics_postgresql(curr: psycopg.Cursor, i: int):
+def calculate_metrics_postgresql(cursor: psycopg.Cursor, i: int):
 	current_data = raw_data[
 		(raw_data.lpep_pickup_datetime >= (begin + datetime.timedelta(days=i))) &
 		(raw_data.lpep_pickup_datetime < (begin + datetime.timedelta(days=i + 1)))]
@@ -83,7 +83,7 @@ def calculate_metrics_postgresql(curr: psycopg.Cursor, i: int):
 	share_missing_values = result['metrics'][2]['result']['current']['share_of_missing_values']
 	fare_amount_quantile = result['metrics'][3]['result']['current']['value']
 
-	curr.execute(
+	cursor.execute(
 		"insert into evidently_metrics(timestamp, prediction_drift, num_drifted_columns, share_missing_values, fare_amount_quantile) values (%s, %s, %s, %s, %s)",
 		(begin + datetime.timedelta(days=i), prediction_drift, num_drifted_columns, share_missing_values, fare_amount_quantile)
 	)
@@ -93,8 +93,8 @@ def main():
 	last_send = datetime.datetime.now() - datetime.timedelta(seconds=10)
 	with psycopg.connect("host=localhost port=5432 dbname=test user=postgres password=example", autocommit=True) as conn:
 		for i in trange(0, 27):
-			with conn.cursor() as curr:
-				calculate_metrics_postgresql(curr, i)
+			with conn.cursor() as cursor:
+				calculate_metrics_postgresql(cursor, i)
 
 			new_send = datetime.datetime.now()
 			seconds_elapsed = (new_send - last_send).total_seconds()

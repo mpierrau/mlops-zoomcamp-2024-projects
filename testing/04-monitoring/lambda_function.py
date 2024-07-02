@@ -1,6 +1,5 @@
 import json
 import base64
-import pickle
 import boto3
 import os
 import mlflow
@@ -43,7 +42,7 @@ def lambda_handler(event, context):
             'version': RUN_ID,
             'prediction': {
                 'ride_duration':prediction,
-                'ride_id': ride_id
+                'ride_id': ride_id,
             }
         }
         predictions.append(prediction_event)

@@ -1,6 +1,7 @@
 import os
 import json
 from pprint import pprint
+
 import boto3
 from deepdiff import DeepDiff
 
@@ -38,7 +39,7 @@ expected_record = {
     'prediction': {
         'ride_duration': 16.7,
         'ride_id': 256,
-    }
+    },
 }
 
 diff = DeepDiff(actual_record, expected_record, significant_digits=2)

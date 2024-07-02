@@ -2,29 +2,32 @@ from pathlib import Path
 
 import model
 
+
 def test_prepare_features():
     model_service = model.ModelService(model=None)
 
     ride = {
         "PULocationID": 130,
         "DOLocationID": 205,
-        "trip_distance": 3.66
+        "trip_distance": 3.66,
     }
 
     actual = model_service.prepare_features(ride)
 
     expected_features = {
         "PU_DO": "130_205",
-        "trip_distance": 3.66
+        "trip_distance": 3.66,
     }
 
     assert actual == expected_features
+
 
 def read_text(file):
     test_directory = Path(__file__).parent
 
     with open(test_directory / file, 'rt', encoding='utf-8') as f_in:
         return f_in.read().strip()
+
 
 def test_base64_decode():
     model_service = model.ModelService(model=None)

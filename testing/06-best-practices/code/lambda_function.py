@@ -8,8 +8,9 @@ TEST_RUN = os.getenv('TEST_RUN', 'False') == 'True'
 
 model_service = model.init(
     prediction_stream_name=PREDICTIONS_STREAM_NAME,
-    run_id = RUN_ID,
+    run_id=RUN_ID,
 )
+
 
 def lambda_handler(event, context):
     # pylint: disable=unused-argument

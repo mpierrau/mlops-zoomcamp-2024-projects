@@ -12,7 +12,7 @@ with open("event.json", 'rt', encoding='utf-8') as f_in:
 url = 'http://localhost:8080/2015-03-31/functions/function/invocations'
 print("posting...")
 t1 = time.time()
-response = requests.post(url, json=event, timeout=1000)
+response = requests.post(url, json=event)
 print("took", time.time() - t1, "seconds")
 
 actual_response = response.json()

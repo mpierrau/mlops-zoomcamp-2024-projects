@@ -61,7 +61,7 @@ Did you take notes? Add them here:
 
 <br>
 
-## Part B
+## Part B 
 
 ### Infrastructure-as-Code
 with Terraform 

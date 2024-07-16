@@ -3,11 +3,6 @@ variable "aws_region" {
     default = "us-east-1"
 }
 
-variable "aws_profile" {
-    description = "AWS profile to use"
-    default = "algodx-magnus-dev"
-}
-
 variable "project_id" {
     description = "project_id"
     default = "mlops-zoomcamp"

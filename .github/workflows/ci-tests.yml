@@ -43,7 +43,7 @@ jobs:
       - name: Integration Tests
         working-directory: "testing/06-best-practices/code/integration-test"
         run: |
-          - run.sh
+          . run.sh
 
   tf-plan:
     runs-on: ubuntu-latest

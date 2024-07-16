@@ -56,9 +56,7 @@ class ModelService:
         # pylint: disable=unused-argument
 
         predictions = []
-        logger.info("In lambda handler")
         for record in event['Records']:
-            logger.info("Going into record")
             encoded_data = record['kinesis']['data']
             ride_event = self.base64_decode(encoded_data)
 
@@ -66,8 +64,7 @@ class ModelService:
             ride_id = ride_event['ride_id']
 
             features = self.prepare_features(ride)
-            logger.info("predicting")
-            prediction = 9999. #self.predict(features)
+            prediction = self.predict(features)
             prediction_event = {
                 'model': 'ride_duration_prediction_model',
                 'version': self.model_version,
@@ -77,11 +74,9 @@ class ModelService:
                 },
             }
             predictions.append(prediction_event)
-        logger.info("Callbacks")
         for callback in self.callbacks:
             callback(prediction_event)
         
-        logger.info(predictions)
         return {'predictions': predictions}
 
 

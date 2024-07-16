@@ -89,7 +89,7 @@ jobs:
             PREDICTIONS_STREAM_NAME=${PREDICTIONS_STREAM_NAME}, \
             MODEL_BUCKET=${MODEL_BUCKET}, \
             RUN_ID=${RUN_ID}\
-            MLFLOW_EXPERIMENT_ID=${MLFLOW_EXPERIMENT_ID}\
+            MLFLOW_EXPERIMENT_ID='2'\
             }" 
 
           STATE=$(aws lambda get-function  --function-name $LAMBDA_FUNCTION --region "us-east-1" --query 'Configuration.LastUpdateStatus' --output text)

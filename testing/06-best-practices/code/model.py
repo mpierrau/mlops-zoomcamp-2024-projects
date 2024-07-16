@@ -14,13 +14,14 @@ def get_model_location(run_id):
     model_location = os.getenv('MODEL_LOCATION')
 
     if model_location is not None:
+        logger.info(f"Trying to load model from {model_location}")
         return model_location
 
     experiment_id = os.getenv('MLFLOW_EXPERIMENT_ID', '1')
     model_bucket = os.getenv('MODEL_BUCKET', ' ')
 
     model_location = f"s3://{model_bucket}/{experiment_id}/{run_id}/artifacts/model"
-
+    logger.info(f"Trying to load model from {model_location}")
     return model_location
 
 
@@ -54,7 +55,7 @@ class ModelService:
 
     def lambda_handler(self, event, context):
         # pylint: disable=unused-argument
-
+        logger.info(f"In lambda_handler")
         predictions = []
         for record in event['Records']:
             encoded_data = record['kinesis']['data']

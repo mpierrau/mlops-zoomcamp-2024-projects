@@ -76,7 +76,6 @@ class ModelService:
             predictions.append(prediction_event)
         for callback in self.callbacks:
             callback(prediction_event)
-        
         return {'predictions': predictions}
 
 

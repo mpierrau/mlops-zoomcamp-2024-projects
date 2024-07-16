@@ -16,9 +16,9 @@ else
     echo "no need to build image ${LOCAL_IMAGE_NAME}"
 fi
 
-export LOCAL_TAG=`date +x"%Y-%m-%d-%H-%M"`
-export LOCAL_IMAGE_NAME="stream-model-duration:${LOCAL_TAG}"
-export PREDICTIONS_STREAM_NAME="ride_predictions"
+#export LOCAL_TAG=`date +x"%Y-%m-%d-%H-%M"`
+#export LOCAL_IMAGE_NAME="stream-model-duration:${LOCAL_TAG}"
+export PREDICTIONS_STREAM_NAME="stream-model-duration"
 export RUN_ID="2eb44a3db0f24d45b76bb6f0e1a71ab5"
 
 sleep 5

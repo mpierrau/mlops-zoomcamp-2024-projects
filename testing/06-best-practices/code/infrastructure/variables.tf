@@ -29,8 +29,16 @@ variable "ecr_repo_name" {
     description = "Name of ECR repository"
 }
 
+variable "ecr_image_tag" {
+    description = "Tag of ECR docker image"
+}
+
 variable "lambda_function_local_path" {
     description = "Path to lambda_function.py"
+}
+
+variable "python_module_local_path" {
+  description = "Path to model.py"
 }
 
 variable "docker_image_local_path" {

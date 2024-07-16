@@ -12,7 +12,7 @@ resource "aws_ecr_repository" "repo" {
 # we can also upload any base image to bootstrap the lambda config, unrelated to your Inference logic
 resource null_resource ecr_image {
   triggers = {
-    python_file = md5(file(var.lambda_function_local_path))
+    python_file = md5("${file(var.lambda_function_local_path)}+{${file(var.python_module_local_path)}}")
     docker_file = md5(file(var.docker_image_local_path))
     pipenv_file = md5(file(var.pipenv_local_path))
   }

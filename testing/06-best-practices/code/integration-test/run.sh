@@ -3,7 +3,9 @@
 # When first non-zero code returned, exit entire script with non-zero code
 #set -e
 
-cd "$(dirname "$0")"
+if [[ -z "${GITHUB_ACTIONS}" ]]; then
+    cd "$(dirname "$0")"
+fi
 
 if [ "${LOCAL_IMAGE_NAME}" == "" ]; then
     LOCAL_TAG=`date +x"%Y-%m-%d-%H-%M"`

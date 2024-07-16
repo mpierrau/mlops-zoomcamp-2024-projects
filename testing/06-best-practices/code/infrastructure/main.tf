@@ -49,8 +49,10 @@ module "ecr_image" {
   ecr_repo_name = "${var.ecr_repo_name}_${var.project_id}"
   account_id = local.account_id
   lambda_function_local_path = var.lambda_function_local_path
+  python_module_local_path = var.python_module_local_path
   docker_image_local_path = var.docker_image_local_path
   pipenv_local_path = var.pipenv_local_path
+  ecr_image_tag = var.ecr_image_tag
 }
 
 module "lambda_function" {

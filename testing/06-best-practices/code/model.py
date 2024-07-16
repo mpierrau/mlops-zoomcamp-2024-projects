@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 import base64
@@ -6,6 +7,8 @@ from typing import Any
 import boto3
 import mlflow
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def get_model_location(run_id):
     model_location = os.getenv('MODEL_LOCATION')
@@ -53,8 +56,9 @@ class ModelService:
         # pylint: disable=unused-argument
 
         predictions = []
-
+        logger.info("In lambda handler")
         for record in event['Records']:
+            logger.info("Going into record")
             encoded_data = record['kinesis']['data']
             ride_event = self.base64_decode(encoded_data)
 
@@ -62,7 +66,8 @@ class ModelService:
             ride_id = ride_event['ride_id']
 
             features = self.prepare_features(ride)
-            prediction = self.predict(features)
+            logger.info("predicting")
+            prediction = 9999. #self.predict(features)
             prediction_event = {
                 'model': 'ride_duration_prediction_model',
                 'version': self.model_version,
@@ -72,10 +77,11 @@ class ModelService:
                 },
             }
             predictions.append(prediction_event)
-
+        logger.info("Callbacks")
         for callback in self.callbacks:
             callback(prediction_event)
-
+        
+        logger.info(predictions)
         return {'predictions': predictions}
 
 
@@ -85,6 +91,7 @@ class KinesisCallback:
         self.prediction_stream_name = prediction_stream_name
 
     def put_record(self, prediction_event):
+        logger.info("KinesisCallback.put_record")
         ride_id = prediction_event['prediction']['ride_id']
         self.kinesis_client.put_record(
             StreamName=self.prediction_stream_name,
@@ -96,6 +103,7 @@ class KinesisCallback:
 def create_kinesis_client():
     endpoint_url = os.getenv('KINESIS_ENDPOINT_URL')
     if endpoint_url is None:
+        logger.info("Creating kinesis client")
         return boto3.client('kinesis')
     return boto3.client('kinesis', endpoint_url=endpoint_url)
 
@@ -110,6 +118,7 @@ def init(
     callbacks = []
 
     if not test_run:
+        logger.info("Not a test run!")
         kinesis_client = create_kinesis_client()
         kinesis_callback = KinesisCallback(
             kinesis_client,

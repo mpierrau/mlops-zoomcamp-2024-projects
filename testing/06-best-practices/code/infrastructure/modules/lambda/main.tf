@@ -16,6 +16,10 @@ resource "aws_lambda_function" "kinesis_lambda" {
     }
   }
   timeout = 180
+  ephemeral_storage {
+    size = 2048
+  }
+  memory_size = 512
 }
 
 # Lambda Invoke & Event Source Mapping

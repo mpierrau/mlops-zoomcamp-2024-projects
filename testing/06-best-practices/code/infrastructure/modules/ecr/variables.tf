@@ -7,6 +7,10 @@ variable "lambda_function_local_path" {
   description = "Path to lambda_function.py"
 }
 
+variable "python_module_local_path" {
+  description = "Path to model.py"
+}
+
 variable "docker_image_local_path" {
   description = "Path to Dockerfile"
 }
@@ -23,7 +27,6 @@ variable "region" {
 
 variable "ecr_image_tag" {
   description = "Docker image tag to use"
-  default = "latest"
 }
 
 variable "account_id" { 

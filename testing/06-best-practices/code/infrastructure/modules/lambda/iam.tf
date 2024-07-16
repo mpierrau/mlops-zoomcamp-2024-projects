@@ -1,5 +1,5 @@
 resource "aws_iam_role" "kinesis_lambda_role" {
-  name = "kinesis_lambda_role"
+  name = "kinesis_lambda_role_${var.lambda_function_name}"
   assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",

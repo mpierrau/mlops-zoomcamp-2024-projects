@@ -3,7 +3,9 @@
 # When first non-zero code returned, exit entire script with non-zero code
 #set -e
 
-cd "$(dirname "$0")"
+if [[ -z "${GITHUB_ACTIONS}" ]]; then
+    cd "$(dirname "$0")"
+fi
 
 if [ "${LOCAL_IMAGE_NAME}" == "" ]; then
     LOCAL_TAG=`date +x"%Y-%m-%d-%H-%M"`
@@ -14,9 +16,7 @@ else
     echo "no need to build image ${LOCAL_IMAGE_NAME}"
 fi
 
-export LOCAL_TAG=`date +x"%Y-%m-%d-%H-%M"`
-export LOCAL_IMAGE_NAME="stream-model-duration:${LOCAL_TAG}"
-export PREDICTIONS_STREAM_NAME="ride_predictions"
+export PREDICTIONS_STREAM_NAME="stream-model-duration"
 export RUN_ID="2eb44a3db0f24d45b76bb6f0e1a71ab5"
 
 docker compose up -d

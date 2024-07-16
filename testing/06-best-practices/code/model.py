@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 import base64
@@ -6,18 +7,21 @@ from typing import Any
 import boto3
 import mlflow
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def get_model_location(run_id):
     model_location = os.getenv('MODEL_LOCATION')
 
     if model_location is not None:
+        logger.info("Trying to load model from %s", model_location)
         return model_location
 
     experiment_id = os.getenv('MLFLOW_EXPERIMENT_ID', '1')
     model_bucket = os.getenv('MODEL_BUCKET', ' ')
 
     model_location = f"s3://{model_bucket}/{experiment_id}/{run_id}/artifacts/model"
-
+    logger.info("Trying to load model from %s", model_location)
     return model_location
 
 
@@ -51,9 +55,8 @@ class ModelService:
 
     def lambda_handler(self, event, context):
         # pylint: disable=unused-argument
-
+        logger.info("In lambda_handler")
         predictions = []
-
         for record in event['Records']:
             encoded_data = record['kinesis']['data']
             ride_event = self.base64_decode(encoded_data)
@@ -72,10 +75,8 @@ class ModelService:
                 },
             }
             predictions.append(prediction_event)
-
         for callback in self.callbacks:
             callback(prediction_event)
-
         return {'predictions': predictions}
 
 
@@ -85,6 +86,7 @@ class KinesisCallback:
         self.prediction_stream_name = prediction_stream_name
 
     def put_record(self, prediction_event):
+        logger.info("KinesisCallback.put_record")
         ride_id = prediction_event['prediction']['ride_id']
         self.kinesis_client.put_record(
             StreamName=self.prediction_stream_name,
@@ -96,6 +98,7 @@ class KinesisCallback:
 def create_kinesis_client():
     endpoint_url = os.getenv('KINESIS_ENDPOINT_URL')
     if endpoint_url is None:
+        logger.info("Creating kinesis client")
         return boto3.client('kinesis')
     return boto3.client('kinesis', endpoint_url=endpoint_url)
 
@@ -110,6 +113,7 @@ def init(
     callbacks = []
 
     if not test_run:
+        logger.info("Not a test run!")
         kinesis_client = create_kinesis_client()
         kinesis_callback = KinesisCallback(
             kinesis_client,

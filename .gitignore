@@ -5,3 +5,6 @@
 **/.artifacts/
 **/mlruns/
 **/venv/
+*.pyc
+
+!testing/06-best-practices/code/integration-test/model/model.pkl

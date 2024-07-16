@@ -11,7 +11,6 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-  profile = var.aws_profile
 }
 
 data "aws_caller_identity" "current_identity" {}
@@ -49,8 +48,10 @@ module "ecr_image" {
   ecr_repo_name = "${var.ecr_repo_name}_${var.project_id}"
   account_id = local.account_id
   lambda_function_local_path = var.lambda_function_local_path
+  python_module_local_path = var.python_module_local_path
   docker_image_local_path = var.docker_image_local_path
   pipenv_local_path = var.pipenv_local_path
+  ecr_image_tag = var.ecr_image_tag
 }
 
 module "lambda_function" {
@@ -62,4 +63,20 @@ module "lambda_function" {
   output_stream_arn = module.output_kinesis_stream.stream_arn
   source_stream_name = "${var.source_stream_name}-${var.project_id}"
   source_stream_arn = module.source_kinesis_stream.stream_arn
+}
+
+output "lambda_function" {
+  value = "${var.lambda_function_name}_${var.project_id}"
+}
+
+output "model_bucket" {
+  value = module.s3_bucket.name
+}
+
+output "predictions_stream_name" {
+  value = "${var.output_stream_name}-${var.project_id}"
+}
+
+output "ecr_repo" {
+  value = "${var.ecr_repo_name}_${var.project_id}"
 }

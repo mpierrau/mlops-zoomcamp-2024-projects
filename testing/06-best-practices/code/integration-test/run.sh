@@ -21,14 +21,18 @@ export LOCAL_IMAGE_NAME="stream-model-duration:${LOCAL_TAG}"
 export PREDICTIONS_STREAM_NAME="ride_predictions"
 export RUN_ID="2eb44a3db0f24d45b76bb6f0e1a71ab5"
 
+sleep 5
+
 docker compose up -d
 
-sleep 10
+sleep 5
 
 aws kinesis create-stream \
     --endpoint-url http://localhost:4566 \
     --stream-name ${PREDICTIONS_STREAM_NAME} \
     --shard-count 1
+
+sleep 5
 
 pipenv run python test_docker.py
 

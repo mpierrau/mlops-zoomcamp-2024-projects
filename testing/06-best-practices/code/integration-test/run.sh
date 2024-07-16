@@ -16,23 +16,17 @@ else
     echo "no need to build image ${LOCAL_IMAGE_NAME}"
 fi
 
-#export LOCAL_TAG=`date +x"%Y-%m-%d-%H-%M"`
-#export LOCAL_IMAGE_NAME="stream-model-duration:${LOCAL_TAG}"
 export PREDICTIONS_STREAM_NAME="stream-model-duration"
 export RUN_ID="2eb44a3db0f24d45b76bb6f0e1a71ab5"
 
-sleep 5
-
 docker compose up -d
 
-sleep 5
+sleep 1
 
 aws kinesis create-stream \
     --endpoint-url http://localhost:4566 \
     --stream-name ${PREDICTIONS_STREAM_NAME} \
     --shard-count 1
-
-sleep 5
 
 pipenv run python test_docker.py
 

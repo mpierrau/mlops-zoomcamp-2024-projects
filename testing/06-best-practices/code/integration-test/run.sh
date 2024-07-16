@@ -23,7 +23,7 @@ export RUN_ID="2eb44a3db0f24d45b76bb6f0e1a71ab5"
 
 docker compose up -d
 
-sleep 5
+sleep 10
 
 aws kinesis create-stream \
     --endpoint-url http://localhost:4566 \
